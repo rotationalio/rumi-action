@@ -1,0 +1,80 @@
+
+name: file-rumi
+
+description: This action monitors file-based translation status of static site projects
+
+inputs:
+  which_rumi:
+    required: true
+    description: file for file-based rumi and msg for msg-based rumi.
+    
+  repo_path:
+    required: true
+    description: Path to the repository for translation monitoring.
+
+  branch:
+    required: false
+    default: "main"
+    description: Name of the branch to read the github history from.
+
+  content_paths:
+    required: false
+    default: "content"
+    description: Paths from the root of the repository to the directory that contains contents for translation
+
+  extensions:
+    required: false
+    default: ".md"
+    description: Extensions of the target files for translation monitoring. 
+
+  target_files:
+    required: false
+    default: ""
+    description: Additional target files outside content_path and extensions.
+  
+  pattern:
+    required: true
+    description: Pattern in which the static site repository is organized (folder/ or .lang).
+
+  langs:
+    required: false
+    default: ""
+    description: Target languages to monitor for translation, e.g. "en zh ja" 
+  
+  src_lang:
+    required: false
+    default: "en"
+    description: Default source language.
+
+  detail_src_lang:
+    required: false
+    default: ""
+    description: Source language to display the translation details.
+
+  detail_tgt_lang:
+    required: false
+    default: ""
+    description: Target language to display the translation details.
+  
+  stats_mode:
+    required: false
+    default: "True"
+    description: Whether to checkout the stats output.
+
+  details_mode:
+    required: false
+    default: "True"
+    description: Whether to checkout the details output.
+
+  use_cache:
+    required: false
+    default: "True"
+    description: Whether to use caching mechanism.
+
+runs:
+  using: docker 
+  image: 'Dockerfile'
+
+branding: 
+  icon: globe 
+  color: blue 
