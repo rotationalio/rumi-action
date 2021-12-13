@@ -14,9 +14,12 @@ Integration of rumi with github action
 
 
 import os
-import rumi
 
 from git import repo
+from rumi.file_rumi.reader import FileReader
+from rumi.file_rumi.reporter import FileReporter
+from rumi.msg_rumi.reader import MsgReader
+from rumi.msg_rumi.reporter import MsgReporter
 
 # Get args from environemt variables as defined in action.yaml:
 
@@ -47,7 +50,7 @@ details_mode = os.environ["INPUT_DETAILS_MODE"]
 
 if which_rumi == "file":
 
-    reader = rumi.FileReader(
+    reader = FileReader(
         repo_path=repo_path,
         branch=branch,
         langs=langs,
@@ -58,7 +61,7 @@ if which_rumi == "file":
         use_cache=use_cache
     )
 
-    reporter = rumi.FileReporter(
+    reporter = FileReporter(
         repo_path=reader.repo_path,
         src_lang=detail_src_lang,
         tgt_lang=detail_tgt_lang
@@ -78,7 +81,7 @@ if which_rumi == "file":
         reporter.print_details(details)
 
 else:
-    reader = rumi.MsgReader(
+    reader = MsgReader(
         repo_path=repo_path,
         branch=branch,
         content_paths=content_paths.split(","),
@@ -87,7 +90,7 @@ else:
         use_cache=use_cache
     )
 
-    reporter = rumi.MsgReporter()
+    reporter = MsgReporter()
 
     for fname in target_files.split(","):
         reader.add_target(fname)
