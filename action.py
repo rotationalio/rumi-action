@@ -84,15 +84,16 @@ else:
     reader = MsgReader(
         repo_path=repo_path,
         branch=branch,
-        content_paths=content_paths.split(","),
-        extensions=extensions.split(","),
+        content_paths=content_paths.split(",") if content_paths else [],
+        extensions=extensions.split(",") if extensions else [],
         src_lang=src_lang,
         use_cache=use_cache
     )
 
     reporter = MsgReporter()
 
-    for fname in target_files.split(","):
+    target_files = target_files.split(",") if target_files else []
+    for fname in target_files:
         reader.add_target(fname)
 
     commits = reader.parse_history()
