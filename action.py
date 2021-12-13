@@ -43,7 +43,9 @@ detail_tgt_lang = os.environ["INPUT_DETAIL_TGT_LANG"]
 stats_mode = os.environ["INPUT_STATS_MODE"]
 details_mode = os.environ["INPUT_DETAILS_MODE"]
 
-
+content_paths = content_paths.split(",") if content_paths else []
+extensions = extensions.split(",") if extensions else []
+target_files = target_files.split(",") if target_files else []
 ##########################################################################
 # File_rumi Action
 ##########################################################################
@@ -54,8 +56,8 @@ if which_rumi == "file":
         repo_path=repo_path,
         branch=branch,
         langs=langs,
-        content_paths=content_paths.split(","),
-        extensions=extensions.split(","),
+        content_paths=content_paths,
+        extensions=extensions,
         pattern=pattern,
         src_lang=src_lang,
         use_cache=use_cache
@@ -66,8 +68,8 @@ if which_rumi == "file":
         src_lang=detail_src_lang,
         tgt_lang=detail_tgt_lang
     )
-
-    for fname in target_files.split(","):
+    
+    for fname in target_files:
         reader.add_target(fname)
 
     commits = reader.parse_history()
@@ -84,15 +86,14 @@ else:
     reader = MsgReader(
         repo_path=repo_path,
         branch=branch,
-        content_paths=content_paths.split(",") if content_paths else [],
-        extensions=extensions.split(",") if extensions else [],
+        content_paths=content_paths,
+        extensions=extensions,
         src_lang=src_lang,
         use_cache=use_cache
     )
 
     reporter = MsgReporter()
 
-    target_files = target_files.split(",") if target_files else []
     for fname in target_files:
         reader.add_target(fname)
 
