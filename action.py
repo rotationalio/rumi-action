@@ -14,9 +14,12 @@ Integration of rumi with github action
 
 
 import os
-import rumi
 
 from git import repo
+from rumi.file_rumi.reader import FileReader
+from rumi.file_rumi.reporter import FileReporter
+from rumi.msg_rumi.reader import MsgReader
+from rumi.msg_rumi.reporter import MsgReporter
 
 # Get args from environemt variables as defined in action.yaml:
 
@@ -40,31 +43,33 @@ detail_tgt_lang = os.environ["INPUT_DETAIL_TGT_LANG"]
 stats_mode = os.environ["INPUT_STATS_MODE"]
 details_mode = os.environ["INPUT_DETAILS_MODE"]
 
-
+content_paths = content_paths.split(",") if content_paths else []
+extensions = extensions.split(",") if extensions else []
+target_files = target_files.split(",") if target_files else []
 ##########################################################################
 # File_rumi Action
 ##########################################################################
 
 if which_rumi == "file":
 
-    reader = rumi.FileReader(
+    reader = FileReader(
         repo_path=repo_path,
         branch=branch,
         langs=langs,
-        content_paths=content_paths.split(","),
-        extensions=extensions.split(","),
+        content_paths=content_paths,
+        extensions=extensions,
         pattern=pattern,
         src_lang=src_lang,
         use_cache=use_cache
     )
 
-    reporter = rumi.FileReporter(
+    reporter = FileReporter(
         repo_path=reader.repo_path,
         src_lang=detail_src_lang,
         tgt_lang=detail_tgt_lang
     )
-
-    for fname in target_files.split(","):
+    
+    for fname in target_files:
         reader.add_target(fname)
 
     commits = reader.parse_history()
@@ -78,18 +83,18 @@ if which_rumi == "file":
         reporter.print_details(details)
 
 else:
-    reader = rumi.MsgReader(
+    reader = MsgReader(
         repo_path=repo_path,
         branch=branch,
-        content_paths=content_paths.split(","),
-        extensions=extensions.split(","),
+        content_paths=content_paths,
+        extensions=extensions,
         src_lang=src_lang,
         use_cache=use_cache
     )
 
-    reporter = rumi.MsgReporter()
+    reporter = MsgReporter()
 
-    for fname in target_files.split(","):
+    for fname in target_files:
         reader.add_target(fname)
 
     commits = reader.parse_history()
